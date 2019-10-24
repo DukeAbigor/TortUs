@@ -182,7 +182,7 @@ function navModule.undoMovement(count)
     end
 
     for i = 1, count do
-        movementLog[i] = tortusBase.cache.movementLog.reverse
+        movementLog[i] = tortusBase.cache.movementLog[i].reverse
     end
 
     local fuelCheck = 0
@@ -196,7 +196,7 @@ function navModule.undoMovement(count)
     end
 
     for i = 1, count do
-        local movement = table.remove(movementLog, #movementLog).reverse
+        local movement = table.remove(movementLog, #movementLog)
         if reduceRotations > 0 and (movement ~= lastRotation or i == count) then
             if movement == lastRotation then
                 reduceRotations = reduceRotations + 1
@@ -207,12 +207,11 @@ function navModule.undoMovement(count)
                 totalRots = 1
                 lastRotation = lastRotation == "turnLeft" and "turnRight" or "turnLeft"
             end
-
-            for _ = 1, totalRots do
-                navModule[lastRotation]()
+            if totalRots > 0 then
+                for _ = 1, totalRots do
+                    navModule[lastRotation]()
+                end
             end
-
-            navModule[lastRotation]()
         end
 
         if (movement == "turnLeft" or movement == "turnRight") then
