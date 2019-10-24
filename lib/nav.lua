@@ -8,7 +8,7 @@ local navModule = {}
 ---@return table
 function navModule.pos()
     tortusBase.updatePosition()
-    return tortusBase.cache.position
+    return tortusBase.cache.position.handle
 end
 
 
@@ -42,6 +42,7 @@ local function internalMovement(count, direction, reverse)
             blocksMoved = i - 1
             break
         else
+            tortusBase.cache.lastCardinalMovement = tortusBase.cache.direction
             tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
                 move = direction,
                 reverse = reverse
@@ -59,7 +60,7 @@ end
 ---@return boolean
 ---@return number
 function navModule.forward(count)
-    internalMovement(count, "forward", "back")
+    return internalMovement(count, "forward", "back")
 end
 
 
@@ -68,7 +69,7 @@ end
 ---@return boolean
 ---@return number
 function navModule.back(count)
-    internalMovement(count, "back", "forward")
+    return internalMovement(count, "back", "forward")
 end
 
 
@@ -77,7 +78,7 @@ end
 ---@param count number
 ---@return boolean
 ---@return number
-function navModule.back(count)
+function navModule.up(count)
     internalMovement(count, "up", "down")
 end
 
@@ -87,7 +88,7 @@ end
 ---@param count number
 ---@return boolean
 ---@return number
-function navModule.back(count)
+function navModule.down(count)
     internalMovement(count, "down", "up")
 end
 

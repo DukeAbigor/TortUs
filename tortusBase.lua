@@ -1,4 +1,4 @@
-require "daemon"
+local daemon = require "daemon"
 
 local tortusBase = {}
 ---localized turtle to prevent other scripts from changing dependencies
@@ -74,7 +74,7 @@ if not fs.exists("tortus/.storage.db") then
 
     local is_itemDropped
 	for i = 1, 16 do
-		if tortusBase.inventory[i].count == 0 then
+		if (not tortusBase.inventory[i]) or tortusBase.inventory[i].count == 0 then
 			break
         end
         --if all inventory spaces are full just drop an item for now
@@ -197,7 +197,7 @@ end
 local cacheMeta = {
 	__newindex = function(t, k, v)
 		rawset(t.handle,k,v)
-		file = fs.open(".tortus/cache.db" , "w")
+		file = fs.open("tortus/.storage.db" , "w")
 		file.write(textutils.serialize(t.handle):gsub("\10" , ""))
 		file.close()
 	end;
@@ -210,7 +210,7 @@ local cacheMeta = {
 	end;
 }
 
-file = fs.open(".tortoise/data" , "r")
+file = fs.open("tortus/.storage.db" , "r")
 
 ---@class cache
 ---@field public position table
@@ -221,8 +221,6 @@ file = fs.open(".tortoise/data" , "r")
 ---@field public lastFuelLevel number
 tortusBase.cache = setmetatable({handle=textutils.unserialize(file.readLine())}, cacheMeta)
 file.close()
-
-tortusBase.cache()
 
 --establishes a daemon to monitor our inventory
 local function monitorInventory()
