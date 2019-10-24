@@ -174,11 +174,15 @@ function navModule.undoMovement(count)
 
     local reduceRotations = 0
     local lastRotation = "none"
-    local movementLog = tortusBase.cache.movementLog.handle
+    local movementLog = {}
 
     count = count or 1
-    if count > #movementLog then
-        count = #movementLog
+    if count > #tortusBase.cache.movementLog.handle then
+        count = #tortusBase.cache.movementLog.handle
+    end
+
+    for i = 1, count do
+        movementLog[i] = tortusBase.cache.movementLog.reverse
     end
 
     local fuelCheck = 0
