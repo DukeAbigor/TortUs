@@ -644,7 +644,7 @@ end
 ---Returns the turtle's left equipped tool.
 ---@return table
 function invModule.getLeftEquipped()
-    return tortusBase.cache.equipment.left
+    return tortusBase.cache.equipment.left.handle
 end
 
 
@@ -652,7 +652,7 @@ end
 ---Returns the turtle's right equipped tool.
 ---@return table
 function invModule.getRightEquipped()
-    return tortusBase.cache.equipment.right
+    return tortusBase.cache.equipment.right.handle
 end
 
 

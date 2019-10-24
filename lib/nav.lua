@@ -6,7 +6,7 @@ local navModule = {}
 
 ---Returns the turtle's position
 ---@return table
-function navModule.pos()
+function navModule.getPos()
     tortusBase.updatePosition()
     return tortusBase.cache.position.handle
 end
@@ -43,7 +43,7 @@ local function internalMovement(count, direction, reverse)
             break
         else
             tortusBase.cache.lastCardinalMovement = tortusBase.cache.direction
-            tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
+            tortusBase.cache.movementLog[#tortusBase.cache.movementLog.handle + 1] = {
                 move = direction,
                 reverse = reverse
             }
@@ -97,7 +97,7 @@ end
 ---Turns the turtle left once.
 function navModule.turnLeft()
     tortusBase.cache.direction = tortusBase.directionLookup[tortusBase.cache.direction].left
-    tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
+    tortusBase.cache.movementLog[#tortusBase.cache.movementLog.handle + 1] = {
         move = "turnLeft",
         reverse = "turnRight"
     }
@@ -109,7 +109,7 @@ end
 ---Turns the turtle right once.
 function navModule.turnRight()
     tortusBase.cache.direction = tortusBase.directionLookup[tortusBase.cache.direction].right
-    tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
+    tortusBase.cache.movementLog[#tortusBase.cache.movementLog.handle + 1] = {
         move = "turnRight",
         reverse = "turnLeft"
     }
@@ -121,11 +121,11 @@ end
 ---Turns the turtle the opposite direction.
 function navModule.reverse()
     tortusBase.cache.direction = tortusBase.directionLookup[tortusBase.cache.direction].back
-    tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
+    tortusBase.cache.movementLog[#tortusBase.cache.movementLog.handle + 1] = {
         move = "turnRight",
         reverse = "turnLeft"
     }
-    tortusBase.cache.movementLog[#tortusBase.cache.movementLog + 1] = {
+    tortusBase.cache.movementLog[#tortusBase.cache.movementLog.handle + 1] = {
         move = "turnRight",
         reverse = "turnLeft"
     }
@@ -157,9 +157,9 @@ end
 
 
 
----Moves the turtle to its left
+---Moves the turtle to its right
 ---@param count number
-function navModule.strafeLeft(count)
+function navModule.strafeRight(count)
     return internalStrafe(navModule.turnRight, navModule.turnLeft, count)
 end
 
@@ -176,8 +176,8 @@ function navModule.undoMovement(count)
     local lastRotation = "none"
 
     count = count or 1
-    if count > #tortusBase.cache.movementLog then
-        count = #tortusBase.cache.movementLog
+    if count > #tortusBase.cache.movementLog.handle then
+        count = #tortusBase.cache.movementLog.handle
     end
 
     local fuelCheck = 0
@@ -191,7 +191,7 @@ function navModule.undoMovement(count)
     end
 
     for i = 1, count do
-        local movement = table.remove(tortusBase.cache.movementLog, #tortusBase.cache.movementLog).reverse
+        local movement = table.remove(tortusBase.cache.movementLog, #tortusBase.cache.movementLog.handle).reverse
         tortusBase.cache.movementLog = tortusBase.cache.movementLog
         if reduceRotations > 0 and (movement ~= lastRotation or i == count) then
             if movement == lastRotation then
@@ -245,7 +245,7 @@ end
 ---@return number
 ---@return string|nil
 function navModule.undoAllMovement()
-	return undo(#tortusBase.cache.movementLog)
+	return undo(#tortusBase.cache.movementLog.handle)
 end
 
 

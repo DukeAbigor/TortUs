@@ -150,7 +150,7 @@ end
 ---Undoes all previous movements without anything stopping it except low fuel.
 ---@return boolean
 function forceModule.undoAllMovementForce()
-	return undoForce(#tortusBase.cache.movementLog)
+	return undoForce(#tortusBase.cache.movementLog.handle)
 end
 
 
