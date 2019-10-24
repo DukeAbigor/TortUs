@@ -29,7 +29,7 @@ tortusBase.chain = setmetatable({},{
 		end
 	end
 })
-table.insert(tortusBase.library, tortusBase.chain)
+tortusBase.library.chain = tortusBase.chain
 
 --[[
     we use this table throughout the program to always remember what direction is relative to which

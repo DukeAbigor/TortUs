@@ -174,15 +174,16 @@ function navModule.undoMovement(count)
 
     local reduceRotations = 0
     local lastRotation = "none"
+    local movementLog = tortusBase.cache.movementLog.handle
 
     count = count or 1
-    if count > #tortusBase.cache.movementLog.handle then
-        count = #tortusBase.cache.movementLog.handle
+    if count > #movementLog then
+        count = #movementLog
     end
 
     local fuelCheck = 0
     for i = 1, count do
-        if tortusBase.cache.movementLog[i] ~= "turnLeft" and tortusBase.cache.movementLog[i] ~= "turnRight" then
+        if movementLog[i] ~= "turnLeft" and movementLog[i] ~= "turnRight" then
             fuelCheck = fuelCheck + 1
         end
     end
@@ -191,8 +192,7 @@ function navModule.undoMovement(count)
     end
 
     for i = 1, count do
-        local movement = table.remove(tortusBase.cache.movementLog, #tortusBase.cache.movementLog.handle).reverse
-        tortusBase.cache.movementLog = tortusBase.cache.movementLog
+        local movement = table.remove(movementLog, #movementLog).reverse
         if reduceRotations > 0 and (movement ~= lastRotation or i == count) then
             if movement == lastRotation then
                 reduceRotations = reduceRotations + 1
@@ -228,14 +228,15 @@ function navModule.undoMovement(count)
             lastRotation = "none"
 
             if not is_Success then
-                table.insert(tortusBase.cache.movementLog, 1, movement)
-                tortusBase.cache.movementLog = tortusBase.cache.movementLog
+                table.insert(movementLog, 1, movement)
+                tortusBase.cache.movementLog = movementLog
                 return false, i, movement
             end
         end
 
     end
 
+    tortusBase.cache.movementLog = movementLog
     return true, count
 end
 
@@ -245,7 +246,7 @@ end
 ---@return number
 ---@return string|nil
 function navModule.undoAllMovement()
-	return undo(#tortusBase.cache.movementLog.handle)
+	return navModule.undoMovement(#tortusBase.cache.movementLog.handle)
 end
 
 
